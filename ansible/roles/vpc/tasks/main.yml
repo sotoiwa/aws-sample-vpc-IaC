@@ -1,0 +1,111 @@
+- name: Create VPC
+  ec2_vpc_net:
+    name: vpc-ansible
+    state: present
+    cidr_block: 10.0.0.0/16
+    region: ap-northeast-1
+    dns_hostnames: yes
+    dns_support: yes
+  register: vpc_net
+
+- name: Create first public subnet
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    cidr: 10.0.1.0/24
+    map_public: yes
+    tags:
+      Name: public-1-ansible
+  register: public_subnet_1
+
+- name: Create second public subnet
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    cidr: 10.0.2.0/24
+    map_public: yes
+    tags:
+      Name: public-2-ansible
+  register: public_subnet_2
+
+- name: Create first private subnet
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    cidr: 10.0.11.0/24
+    tags:
+      Name: private-1-ansible
+  register: private_subnet_1
+
+- name: Create second private subnet
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    cidr: 10.0.12.0/24
+    tags:
+      Name: private-2-ansible
+  register: private_subnet_2
+
+- name: Create internet gateway
+  ec2_vpc_igw:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    tags:
+      Name: igw-ansible
+  register: igw
+
+- name: Create first nat gateway and allocate new EIP
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ public_subnet_1.subnet.id }}"
+    wait: yes
+    if_exist_do_not_create: true
+  register: ngw_1
+
+- name: Create second nat gateway and allocate new EIP
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{ public_subnet_2.subnet.id }}"
+    wait: yes
+    if_exist_do_not_create: true
+  register: ngw_2
+
+- name: Set up public route table
+  ec2_vpc_route_table:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    subnets:
+      - "{{ public_subnet_1.subnet.id }}"
+      - "{{ public_subnet_2.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id }}"
+    tags:
+      Name: public-ansible
+  register: public_route_table
+
+- name: Set up first private route table
+  ec2_vpc_route_table:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    subnets:
+      - "{{ private_subnet_1.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ ngw_1.nat_gateway_id }}"
+    tags:
+      Name: private-1-ansible
+  register: private_route_table_1
+
+- name: Set up second private route table
+  ec2_vpc_route_table:
+    state: present
+    vpc_id: "{{ vpc_net.vpc.id }}"
+    subnets:
+      - "{{ private_subnet_2.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ ngw_2.nat_gateway_id }}"
+    tags:
+      Name: private-2-ansible
+  register: private_route_table_2

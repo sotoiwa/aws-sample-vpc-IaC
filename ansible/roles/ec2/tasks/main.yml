@@ -1,0 +1,30 @@
+- name: Search for Amazon Linux 2 AMI
+  ec2_ami_facts:
+    filters:
+      name: "amzn2-ami-hvm-2.0.????????-x86_64-gp2"
+    owners: amazon
+  register: amazon_linux_2_amis
+
+- name: Get latest AMI
+  set_fact:
+    latest_ami: "{{ amazon_linux_2_amis.images | sort(attribute='creation_date') | last }}"
+
+- name: Start EC2 instance
+  ec2:
+    key_name: sotosugi
+    instance_type: t3.micro
+    image: "{{ latest_ami.image_id}}"
+    wait: yes
+    group: ["web", "ssh"]
+    vpc_subnet_id: "{{ public_subnet_1.subnet.id }}"
+    assign_public_ip: yes
+    instance_tags:
+      Name: web-ansible
+    count_tag:
+      Name: web-ansible
+    exact_count: 1
+    user_data: |
+      #!/bin/bash
+      yum install -y httpd
+      systemctl start httpd.service
+      systemctl enable httpd.service
