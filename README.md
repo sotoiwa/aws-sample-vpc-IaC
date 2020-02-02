@@ -5,3 +5,17 @@ CloudFormation、Terraform、Ansibleなどいくつかの方法で基本的なVP
 - [Terraform](terraform)
 - [Ansible](ansible)
 - [CloudFormation](cloudformation)
+
+## CDK TypeScript
+
+CDKのインストール。
+
+```shell
+npm install -g aws-cdk
+```
+
+プロジェクトの初期化。
+
+```shell
+cdk init --language typescript
+```
