@@ -1,0 +1,18 @@
+[
+  {
+    "ParameterKey": "VPCStack",
+    "ParameterValue": "MyVPCStack"
+  },
+  {
+    "ParameterKey": "SecurityGroupStack",
+    "ParameterValue": "MySecurityGroupStack"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "sotosugi"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t3.micro"
+  }
+]

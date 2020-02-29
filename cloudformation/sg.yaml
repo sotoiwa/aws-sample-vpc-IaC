@@ -1,47 +1,52 @@
 AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  VPCStack:
+    Type: String
+    Default: MyVPCStack
+
 Resources:
-  
   WebSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    Properties: 
+    Properties:
       GroupDescription: security group for web
       GroupName: web
-      SecurityGroupIngress: 
+      SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-      SecurityGroupEgress: 
+      SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: 0
           ToPort: 0
           CidrIp: 0.0.0.0/0
-      VpcId: !ImportValue VPC
+      VpcId: {"Fn::ImportValue": !Sub "${VPCStack}-VPC"}
 
-  SshSecurityGroup:
+  SSHSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    Properties: 
+    Properties:
       GroupDescription: security group for ssh
       GroupName: ssh
-      SecurityGroupIngress: 
+      SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-      SecurityGroupEgress: 
+      SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: 0
           ToPort: 0
           CidrIp: 0.0.0.0/0
-      VpcId: !ImportValue VPC
+      VpcId: {"Fn::ImportValue": !Sub "${VPCStack}-VPC"}
 
-Outputs: 
+Outputs:
 
-  WebSecurityGroup: 
+  WebSecurityGroup:
     Value: !Ref WebSecurityGroup
-    Export: 
-      Name: WebSecurityGroup
-  SshSecurityGroup: 
-    Value: !Ref SshSecurityGroup
-    Export: 
-      Name: SshSecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-WebSecurityGroup
+  SSHSecurityGroup:
+    Value: !Ref SSHSecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-SSHSecurityGroup

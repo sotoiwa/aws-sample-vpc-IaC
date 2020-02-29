@@ -1,25 +1,38 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
+  VPCStack:
+    Type: String
+    Default: MyVPCStack
+  SecurityGroupStack:
+    Type: String
+    Default: MySecurityGroupStack
+  KeyName:
+    Type: String
+    Default: sotosugi
+  InstanceType:
+    Type: String
+    Default: t3.micro
+
   LatestAmiId:
     Type : AWS::SSM::Parameter::Value<String>
     Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
 
 Resources:
-  
+
   Instance :
     Type: AWS::EC2::Instance
-    Properties: 
+    Properties:
       ImageId: !Ref LatestAmiId
-      InstanceType: t3.micro
-      KeyName: sotosugi
-      SecurityGroupIds: 
-        - !ImportValue WebSecurityGroup
-        - !ImportValue SshSecurityGroup
-      SubnetId: !ImportValue PublicSubnet1
-      Tags: 
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - {"Fn::ImportValue": !Sub "${SecurityGroupStack}-WebSecurityGroup"}
+        - {"Fn::ImportValue": !Sub "${SecurityGroupStack}-SSHSecurityGroup"}
+      SubnetId: {"Fn::ImportValue": !Sub "${VPCStack}-PublicSubnet1"}
+      Tags:
         - Key: Name
-          Value: web-cfn
+          Value: !Sub ${AWS::StackName}-Instance
       UserData: !Base64 |
         #!/bin/bash
         yum install -y httpd
