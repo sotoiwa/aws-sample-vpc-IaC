@@ -9,7 +9,7 @@
   },
   {
     "ParameterKey": "KeyName",
-    "ParameterValue": "sotosugi"
+    "ParameterValue": "default"
   },
   {
     "ParameterKey": "InstanceType",

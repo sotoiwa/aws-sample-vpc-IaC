@@ -121,7 +121,7 @@ Resources:
   PublicSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref PublicSubnet1RouteTable
+      RouteTableId: !Ref PublicSubnet2RouteTable
       SubnetId: !Ref PublicSubnet2
 
   PublicSubnet2DefaultRoute:

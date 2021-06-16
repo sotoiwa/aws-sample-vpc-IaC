@@ -23,28 +23,28 @@ aws cloudformation validate-template \
 VPCをデプロイする。
 
 ```shell
-aws cloudformation create-stack \
+aws cloudformation deploy \
   --stack-name MyVPCStack \
-  --template-body file://vpc.yaml \
-  --parameters file://vpc.parameter.json
+  --template-file vpc.yaml \
+  --parameter-overrides file://vpc.parameter.json
 ```
 
 セキュリティグループをデプロイする。
 
 ```shell
-aws cloudformation create-stack \
+aws cloudformation deploy \
   --stack-name MySecurityGroupStack \
-  --template-body file://sg.yaml \
-  --parameters file://sg.parameter.json
+  --template-file sg.yaml \
+  --parameter-overrides file://sg.parameter.json
 ```
 
 EC2インスタンスをデプロイする。
 
 ```shell
-aws cloudformation create-stack \
+aws cloudformation deploy \
   --stack-name MyInstanceStack \
-  --template-body file://ec2.yaml \
-  --parameters file://ec2.parameter.json
+  --template-file ec2.yaml \
+  --parameter-overrides file://ec2.parameter.json
 ```
 
 ## 削除

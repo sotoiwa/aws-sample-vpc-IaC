@@ -9,7 +9,7 @@ Parameters:
     Default: MySecurityGroupStack
   KeyName:
     Type: String
-    Default: sotosugi
+    Default: default
   InstanceType:
     Type: String
     Default: t3.micro
