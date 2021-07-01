@@ -8,10 +8,10 @@
 テンプレートのバリデーションを行う。
 
 ```shell
-npm install -g cfn-lint
-cfn-lint validate vpc.yaml
-cfn-lint validate sg.yaml
-cfn-lint validate ec2.yaml
+brew install cfn-lint
+cfn-lint vpc.yaml
+cfn-lint sg.yaml
+cfn-lint ec2.yaml
 aws cloudformation validate-template \
     --template-body file://vpc.yaml
 aws cloudformation validate-template \

@@ -79,8 +79,6 @@ Resources:
       RouteTableId: !Ref PublicSubnet1RouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-    DependsOn:
-      - InternetGateway
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP
@@ -130,8 +128,6 @@ Resources:
       RouteTableId: !Ref PublicSubnet2RouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-    DependsOn:
-      - InternetGateway
 
   NatGateway2EIP:
     Type: AWS::EC2::EIP
