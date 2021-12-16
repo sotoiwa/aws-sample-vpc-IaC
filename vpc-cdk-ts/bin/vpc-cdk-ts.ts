@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
-import cdk = require('@aws-cdk/core');
+import * as cdk from 'aws-cdk-lib';
 import { VpcCdkTsStack } from '../lib/vpc-cdk-ts-stack';
 
 const app = new cdk.App();
